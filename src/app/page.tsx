@@ -14,6 +14,8 @@ async function getPosts() {
   return client.fetch(query);
 }
 
+export const revalidate = 60;
+
 export default async function page() {
   const posts = (await getPosts()) as Post[];
   return (
