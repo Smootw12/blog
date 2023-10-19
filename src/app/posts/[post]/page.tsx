@@ -6,6 +6,7 @@ import { urlForImage } from "../../../../sanity/lib/image";
 import Menu from "@/components/Menu";
 import { Post } from "@/util/types";
 import PortableText from "react-portable-text";
+import type { Image as sanityImage } from "sanity";
 
 type Props = {
   params: { post: string };
@@ -13,7 +14,7 @@ type Props = {
 
 async function getPost(slug: string) {
   try {
-    const query = `*[_type == "post" && slug.current == "${slug}"][0] {
+    const query = `*[_type == "post" && slug.current == "${slug}"]{
       title,
       author-> {
         name,
@@ -26,17 +27,18 @@ async function getPost(slug: string) {
       categories[]-> {
         name,
       },
-    }`;
+    }[0]`;
     return await client.fetch(query);
   } catch (error) {
     console.log(error);
   }
 }
 
+export const revalidate = 60;
+
 async function page({ params }: Props) {
   const post = (await getPost(params.post)) as Post;
 
-  console.log(post);
   if (!post) {
     return (
       <div className="w-full max-w-2xl flex flex-col items-start">
@@ -104,6 +106,15 @@ async function page({ params }: Props) {
             ),
             blockquote: (props: any) => (
               <p className="text-small font-extralight my-5" {...props} />
+            ),
+            image: (image: sanityImage) => (
+              <Image
+                width="1920"
+                height="1080"
+                className="w-full rounded-2xl my-8"
+                src={urlForImage(image).url()}
+                alt="Main image"
+              />
             ),
           }}
         />

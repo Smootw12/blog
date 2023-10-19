@@ -9,7 +9,7 @@ type Props = {
 
 async function getPosts(category: string) {
   try {
-    const categoryIdQuery = `*[_type == "category" && name == "${category}"] {
+    const categoryIdQuery = `*[_type == "category" && name == "${category}"]{
       _id,
     }`;
 
@@ -19,18 +19,20 @@ async function getPosts(category: string) {
       return [];
     }
 
-    const postQuery = `*[_type == "post" && references("${categoryId[0]._id}")] {
+    const postQuery = `*[_type == "post" && references("${categoryId[0]._id}")]{
       slug,
       description,
       title,
       mainImage,
     }`;
 
-    return await client.fetch(postQuery);
+    return await client.fetch(postQuery, { cache: "no-store" });
   } catch (error: any) {
     console.log(error);
   }
 }
+
+export const revalidate = 60;
 
 async function page({ params }: Props) {
   const { category } = params;

@@ -10,6 +10,28 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/posts/:post", // Adjust this to match your dynamic route pattern
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "s-maxage=60, stale-while-revalidate",
+          },
+        ],
+      },
+      {
+        source: "/categories/:category", // Adjust this to match your dynamic route pattern
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "s-maxage=60, stale-while-revalid",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

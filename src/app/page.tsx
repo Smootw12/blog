@@ -4,7 +4,7 @@ import { client } from "../../sanity/lib/client";
 import { Post } from "@/util/types";
 
 async function getPosts() {
-  const query = `*[_type == "post"][0...10] {
+  const query = `*[_type == "post"]{
     slug,
     description,
     title,
@@ -13,6 +13,8 @@ async function getPosts() {
 
   return client.fetch(query);
 }
+
+export const revalidate = 60;
 
 export default async function page() {
   const posts = (await getPosts()) as Post[];
