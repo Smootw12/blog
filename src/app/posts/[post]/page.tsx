@@ -38,7 +38,6 @@ async function getPost(slug: string) {
 async function page({ params }: Props) {
   const post = (await getPost(params.post)) as Post;
 
-  console.log(post);
   if (!post) {
     return (
       <div className="w-full max-w-2xl flex flex-col items-start">
