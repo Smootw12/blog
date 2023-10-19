@@ -35,6 +35,8 @@ async function getPost(slug: string) {
   }
 }
 
+export const revalidate = 60;
+
 async function page({ params }: Props) {
   const post = (await getPost(params.post)) as Post;
 
