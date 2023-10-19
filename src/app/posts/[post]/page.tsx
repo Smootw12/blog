@@ -6,6 +6,8 @@ import { urlForImage } from "../../../../sanity/lib/image";
 import Menu from "@/components/Menu";
 import { Post } from "@/util/types";
 import PortableText from "react-portable-text";
+import type { Image as sanityImage } from "sanity";
+
 
 type Props = {
   params: { post: string };
@@ -104,6 +106,15 @@ async function page({ params }: Props) {
             ),
             blockquote: (props: any) => (
               <p className="text-small font-extralight my-5" {...props} />
+            ),
+            image: (image: sanityImage) => (
+              <Image
+                width="1920"
+                height="1080"
+                className="w-full rounded-2xl my-8"
+                src={urlForImage(image).url()}
+                alt="Main image"
+              />
             ),
           }}
         />
