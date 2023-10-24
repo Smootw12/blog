@@ -42,7 +42,7 @@ async function page({ params }: Props) {
 
   if (!post) {
     return (
-      <div className="w-full max-w-2xl flex flex-col items-start">
+      <div className="w-full max-w-[95%] md:max-w-2xl flex flex-col items-start">
         <div className="alert alert-error w-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@ async function page({ params }: Props) {
     <>
       <Menu />
 
-      <div className="w-full max-w-2xl flex flex-col items-start space-y-3">
+      <div className="w-full max-w-[95%] md:max-w-2xl flex flex-col items-start space-y-3">
         <Image
           width="1920"
           height="1080"
