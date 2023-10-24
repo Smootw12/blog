@@ -65,7 +65,7 @@ async function page({ params }: Props) {
     <>
       <Menu />
 
-      <div className="w-full max-w-2xl flex flex-col items-start space-y-3">
+      <div className="w-full max-w-[95%] md:max-w-2xl flex flex-col items-start space-y-3">
         <Image
           width="1920"
           height="1080"
