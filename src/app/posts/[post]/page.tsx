@@ -69,15 +69,15 @@ async function page({ params }: Props) {
         <Image
           width="1920"
           height="1080"
-          className="w-full rounded-2xl"
+          className="w-full rounded-2xl mb-6"
           src={urlForImage(post.mainImage!).url()}
           alt="Main image"
         />
-        <p className="text-base-content/60 mb-2 text-xs">
+        <p className="text-base-content/60 text-xs italic">
           Published by {post.author.name}{" "}
           {moment(Date.parse(post.publishedAt)).fromNow()}
         </p>
-        <div className="flex space-x-3">
+        <div className="flex space-x-3 py-2">
           {post.categories.map((category) => (
             <div
               key={category.name}
@@ -87,17 +87,25 @@ async function page({ params }: Props) {
             </div>
           ))}
         </div>
-        <h1 className="text-4xl font-extrabold">{post.title}</h1>
+        <h1 className="text-4xl font-black">{post.title}</h1>
         <PortableText
           dataset={process.env.NEXT_PUBLIC_SANITY_DATASET!}
           projectId={process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!}
           content={post.body}
           serializers={{
+            normal: ({ children }: any) => (
+              <p className="font-light leading-7 my-2">{children}</p>
+            ),
+            strong: ({ children }: any) => (
+              <span className="font-semibold">{children}</span>
+            ),
             h2: (props: any) => (
-              <h1 className="text-xl font-extrabold my-5" {...props} />
+              <h1 className="text-2xl font-extrabold my-5" {...props} />
             ),
             li: ({ children }: any) => (
-              <li className="ml-4 list-disc">{children}</li>
+              <li className="ml-4 list-disc font-light leading-7 my-2">
+                {children}
+              </li>
             ),
             links: ({ href, children }: any) => (
               <a href={href} className="text-blue-500 hover:underline">
@@ -105,7 +113,12 @@ async function page({ params }: Props) {
               </a>
             ),
             blockquote: (props: any) => (
-              <p className="text-small font-extralight my-5" {...props} />
+              <div className="my-5 border-l-[1px]">
+                <p
+                  className="text-small font-extralight py-2 px-4"
+                  {...props}
+                />
+              </div>
             ),
             image: (image: sanityImage) => (
               <Image
