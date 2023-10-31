@@ -34,6 +34,7 @@ async function getPosts(category: string) {
 
 export const revalidate = 60;
 
+
 async function page({ params }: Props) {
   const { category } = params;
   const posts = (await getPosts(category)) as Post[];
