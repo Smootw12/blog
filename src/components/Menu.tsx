@@ -7,7 +7,7 @@ async function getCategories() {
     name,
   }`;
 
-  return await client.fetch(query, { cache: "no-store" });
+  return await client.fetch(query);
 }
 
 interface Props {

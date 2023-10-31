@@ -4,17 +4,23 @@ import Image from "next/image";
 import { client } from "../../../../sanity/lib/client";
 import { urlForImage } from "../../../../sanity/lib/image";
 import Menu from "@/components/Menu";
-import { Post } from "@/util/types";
+import { Post, Comment } from "@/util/types";
 import PortableText from "react-portable-text";
 import type { Image as sanityImage } from "sanity";
+import Comments from "@/components/Comments";
 
 type Props = {
   params: { post: string };
 };
 
+interface PostQuery extends Post {
+  comments: Comment[];
+}
+
 async function getPost(slug: string) {
   try {
     const query = `*[_type == "post" && slug.current == "${slug}"]{
+      _id,
       title,
       author-> {
         name,
@@ -27,6 +33,7 @@ async function getPost(slug: string) {
       categories[]-> {
         name,
       },
+      'comments': *[_type == "comment" && post._ref == ^._id && approved == true],
     }[0]`;
     return await client.fetch(query);
   } catch (error) {
@@ -37,8 +44,7 @@ async function getPost(slug: string) {
 export const revalidate = 60;
 
 async function page({ params }: Props) {
-  const post = (await getPost(params.post)) as Post;
-
+  const post = (await getPost(params.post)) as PostQuery;
   if (!post) {
     return (
       <div className="w-full max-w-2xl flex flex-col items-start">
@@ -131,6 +137,7 @@ async function page({ params }: Props) {
             ),
           }}
         />
+        <Comments postId={post._id} comments={post.comments} />
       </div>
     </>
   );
