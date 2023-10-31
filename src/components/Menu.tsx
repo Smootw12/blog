@@ -3,11 +3,11 @@ import { client } from "../../sanity/lib/client";
 import MenuItem from "./MenuItem";
 
 async function getCategories() {
-  const query = `*[_type == "category"] {
+  const query = `*[_type == "category"]{
     name,
   }`;
 
-  return await client.fetch(query);
+  return await client.fetch(query, { cache: "no-store" });
 }
 
 interface Props {
