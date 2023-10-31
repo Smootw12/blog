@@ -14,6 +14,7 @@ interface FormValues extends Pick<Comment, "body" | "email" | "name"> {}
 
 function Comments({ comments, postId }: Props) {
   const [rating, setRating] = useState<Comment["rating"]>(5);
+
   const {
     register,
     handleSubmit,
@@ -47,9 +48,7 @@ function Comments({ comments, postId }: Props) {
 
   function handleRating(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(errors);
-    setRating(
-      parseInt(e.currentTarget.getAttribute("name")!) as Comment["rating"]
-    );
+    setRating(parseInt(e.target.value) as Comment["rating"]);
   }
 
   return (
@@ -70,41 +69,46 @@ function Comments({ comments, postId }: Props) {
           <div className="rating gap-1">
             <input
               type="radio"
-              name="1"
+              name="rate"
+              value={1}
               className="mask mask-heart bg-red-400"
               onChange={handleRating}
               checked={rating === 1}
             />
             <input
               type="radio"
-              name="2"
+              name="rate"
+              value={2}
               className="mask mask-heart bg-orange-400"
               onChange={handleRating}
               checked={rating === 2}
             />
             <input
               type="radio"
-              name="3"
+              name="rate"
+              value={3}
               className="mask mask-heart bg-yellow-400"
               onChange={handleRating}
               checked={rating === 3}
             />
             <input
               type="radio"
-              name="4"
+              name="rate"
+              value={4}
               className="mask mask-heart bg-lime-400"
               onChange={handleRating}
               checked={rating === 4}
             />
             <input
               type="radio"
-              name="5"
+              name="rate"
+              value={5}
               className="mask mask-heart bg-green-400"
               onChange={handleRating}
               checked={rating === 5}
             />
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="form-control w-full ">
               <label className="label">
                 <span className="label-text text-primary">Email</span>
