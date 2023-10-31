@@ -1,6 +1,7 @@
 import type { Image, Slug } from "sanity";
 
 export interface Post {
+  _id: string;
   title: string;
   slug: Slug;
   description: string;
@@ -18,7 +19,14 @@ export interface Author {
   bio: string;
 }
 
-export interface Category {
+export type Category = {
   name: string;
   description: string;
+};
+
+export interface Comment {
+  rating: 1 | 2 | 3 | 4 | 5;
+  name: string;
+  email: string;
+  body: string;
 }
