@@ -9,12 +9,7 @@ function MenuItem({ active, name }: Props) {
   return (
     <>
       <li>
-        <Link
-          className={active ? "active" : "false"}
-          href={!active ? `/categories/${name}` : "/"}
-        >
-          {name}
-        </Link>
+        <Link href={`/categories/${name}`}>{name}</Link>
       </li>
     </>
   );
