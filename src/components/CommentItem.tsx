@@ -8,7 +8,7 @@ type Props = {
 function CommentItem({ comment }: Props) {
   return (
     <>
-      <div className="card-body bg-base-200 w-full rounded-lg px-10 py-8">
+      <div className="card-body bg-base-200 w-full rounded-xl px-10 py-8">
         <div className="flex items-center gap-2">
           <div className="flex flex-col items-start text-xs">
             <div className="flex space-x-3">
