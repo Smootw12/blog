@@ -36,14 +36,9 @@ function Comments({ comments, postId }: Props) {
         }),
       });
 
-      console.log(res);
+      setCommentSubmitted(true);
     } catch (error) {
       console.log("onSubmit error", error);
-    }
-
-    for (let key in register) {
-      console.log(key);
-      resetField(key as "body" | "email" | "name");
     }
   }
 
