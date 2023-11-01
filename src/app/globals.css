@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.repeat-animation {
+  animation: repeatMount 2s linear infinite;
+}
+
+.heart-animation {
+  animation: heartMount 1.5s linear infinite;
+}
+
+@keyframes repeatMount {
+  0% {
+    transform: scale(1);
+  }
+  5% {
+    transform: scale(1.1);
+  }
+  10% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes heartMount {
+  0% {
+    transform: scale(1);
+  }
+  4% {
+    transform: scale(1.1);
+  }
+  8% {
+    transform: scale(1);
+  }
+  16% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.1);
+  }
+  24% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

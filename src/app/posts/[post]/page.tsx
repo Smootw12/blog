@@ -3,7 +3,7 @@ import moment from "moment";
 import Image from "next/image";
 import { client } from "../../../../sanity/lib/client";
 import { urlForImage } from "../../../../sanity/lib/image";
-import Menu from "@/components/Menu";
+import Menu from "@/components/PageMenu";
 import { Post, Comment } from "@/util/types";
 import PortableText from "react-portable-text";
 import type { Image as sanityImage } from "sanity";
@@ -69,8 +69,6 @@ async function page({ params }: Props) {
   }
   return (
     <>
-      <Menu />
-
       <div className="w-full max-w-[95%] md:max-w-2xl flex flex-col items-start space-y-3">
         <Image
           width="1920"

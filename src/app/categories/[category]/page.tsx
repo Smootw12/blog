@@ -1,7 +1,7 @@
 import { Category, Post } from "@/util/types";
 import { client } from "../../../../sanity/lib/client";
 import PostItem from "@/components/PostItem";
-import Menu from "@/components/Menu";
+import Menu from "@/components/PageMenu";
 
 type Props = {
   params: { category: string };
@@ -34,14 +34,13 @@ async function getPosts(category: string) {
 
 export const revalidate = 60;
 
-
 async function page({ params }: Props) {
   const { category } = params;
   const posts = (await getPosts(category)) as Post[];
 
   return (
     <>
-      <p className="mb-10 z-10 text-6xl font-bold mt-20">
+      <p className="mb-10 z-10 text-6xl font-bold">
         <span className="inline-grid">
           <span
             className="text-center pointer-events-none col-start-1 row-start-1 bg-[linear-gradient(90deg,hsl(var(--s))_0%,hsl(var(--sf))_9%,hsl(var(--pf))_42%,hsl(var(--p))_47%,hsl(var(--a))_100%)] bg-clip-text opacity-70 blur-3xl [-webkit-text-fill-color:transparent] [transform:translate3d(0,0,0)] [@supports(color:oklch(0_0_0))]:bg-[linear-gradient(90deg,hsl(var(--s))_4%,color-mix(in_oklch,hsl(var(--sf)),hsl(var(--pf)))_22%,hsl(var(--p))_45%,color-mix(in_oklch,hsl(var(--p)),hsl(var(--a)))_67%,hsl(var(--a))_100.2%)]"
@@ -54,7 +53,6 @@ async function page({ params }: Props) {
           </span>
         </span>
       </p>
-      <Menu active={category} />
       {posts.length > 0 ? (
         posts.map((post) => (
           <PostItem
