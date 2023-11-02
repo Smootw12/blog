@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.theme-responsive-img {
+  border-radius: var(--rounded-box, 1rem /* 16px */);
+}
+
 .repeat-animation {
   animation: repeatMount 2s linear infinite;
 }
