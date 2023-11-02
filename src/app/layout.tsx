@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Footer from "@/components/Footer";
 import Menu from "@/components/PageMenu";
-import MenuContent from "@/components/MenuContent";
+import { defaultTheme } from "@/lib/themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html data-theme={defaultTheme} lang="en">
       <body className={inter.className}>
         <Navbar />
         <div className="flex h-full w-full">
