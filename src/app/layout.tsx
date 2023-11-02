@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   const theme = getCookies().get("theme");
   return (
-    <html data-theme={theme} lang="it">
+    <html data-theme={theme || defaultTheme} lang="it">
       <body className={inter.className}>
         <ClientCookiesProvider value={cookies().getAll()}>
           <Navbar />
