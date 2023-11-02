@@ -73,7 +73,7 @@ async function page({ params }: Props) {
         <Image
           width="1920"
           height="1080"
-          className="w-full rounded-2xl mb-6"
+          className="w-full theme-responsive-img mb-6"
           src={urlForImage(post.mainImage!).url()}
           alt="Main image"
         />
@@ -128,7 +128,7 @@ async function page({ params }: Props) {
               <Image
                 width="1920"
                 height="1080"
-                className="w-full rounded-2xl my-8"
+                className="w-full theme-responsive-img my-8"
                 src={urlForImage(image).url()}
                 alt="Main image"
               />

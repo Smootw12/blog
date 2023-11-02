@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import Menu from "@/components/PageMenu";
 import { defaultTheme } from "@/lib/themes";
 
+import { cookies } from "next/headers";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,8 +20,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = cookies();
+  const theme = cookieStore.get("theme");
+
   return (
-    <html data-theme={defaultTheme} lang="en">
+    <html data-theme={theme || defaultTheme} lang="en">
       <body className={inter.className}>
         <Navbar />
         <div className="flex h-full w-full">
