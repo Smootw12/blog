@@ -2,12 +2,17 @@
 
 import { themes, defaultTheme } from "@/lib/themes";
 import ThemeItem from "./ThemeItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCookies } from "next-client-cookies";
 
 type Props = {};
 
 function ThemeChanger({}: Props) {
-  const [theme, setTheme] = useState<(typeof themes)[number]>(defaultTheme);
+  const cookies = useCookies();
+
+  const [theme, setTheme] = useState<(typeof themes)[number]>(
+    cookies.get("theme") || defaultTheme
+  );
 
   return (
     <div title="Change Theme" className="dropdown dropdown-end ">
@@ -47,6 +52,7 @@ function ThemeChanger({}: Props) {
                   .querySelector("html")!
                   .setAttribute("data-theme", themeItem);
                 setTheme(themeItem);
+                cookies.set("theme", themeItem);
               }}
               theme={themeItem}
               key={themeItem}

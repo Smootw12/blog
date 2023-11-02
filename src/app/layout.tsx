@@ -7,6 +7,8 @@ import Menu from "@/components/PageMenu";
 import { defaultTheme } from "@/lib/themes";
 
 import { cookies } from "next/headers";
+import { ClientCookiesProvider } from "@/components/providers/CookiesProvider";
+import { getCookies } from "next-client-cookies/server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,20 +22,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
-  const theme = cookieStore.get("theme");
-
+  const theme = getCookies().get("theme");
   return (
-    <html data-theme={theme || defaultTheme} lang="en">
+    <html data-theme={theme} lang="it">
       <body className={inter.className}>
-        <Navbar />
-        <div className="flex h-full w-full">
-          <Menu />
-          <div className="w-full bg-base-100 flex flex-col items-center min-h-[100vh] mt-[104px]">
-            {children}
+        <ClientCookiesProvider value={cookies().getAll()}>
+          <Navbar />
+          <div className="flex h-full w-full">
+            <Menu />
+            <div className="w-full bg-base-100 flex flex-col items-center min-h-[100vh] mt-[104px]">
+              {children}
+            </div>
           </div>
-        </div>
-        <Footer />
+          <Footer />
+        </ClientCookiesProvider>
       </body>
     </html>
   );
