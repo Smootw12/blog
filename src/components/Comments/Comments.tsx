@@ -1,49 +1,64 @@
 "use client";
 
-import { Comment } from "@/util/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Comment } from "@/types/types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import CommentItem from "./CommentItem";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { CommentFormValidator, CommentPayload } from "@/lib/validators/comment";
+import { User } from "@prisma/client";
+import toast from "react-hot-toast";
+import RatingSelector from "./RatingSelector";
+import { z } from "zod";
 
 type Props = {
+  user?: Pick<User, "name" | "email"> | null;
   comments: Comment[];
   postId: string;
 };
 
-interface FormValues extends Pick<Comment, "body" | "email" | "name"> {}
-
-function Comments({ comments, postId }: Props) {
+function Comments({ comments, postId, user }: Props) {
   const [rating, setRating] = useState<Comment["rating"]>(5);
   const [commentSubmitted, setCommentSubmitted] = useState(false);
 
   const {
+    watch,
     register,
     handleSubmit,
-    resetField,
     formState: { errors, isDirty, isValid },
-  } = useForm<FormValues>();
+  } = useForm<Pick<CommentPayload, "comment" | "email" | "name">>({
+    resolver: zodResolver(CommentFormValidator),
+    defaultValues: {
+      email: user?.email || "",
+      name: user?.name || "",
+    },
+  });
 
-  async function onSubmit(data: FormValues) {
-    try {
-      const res = await fetch("/api/createComment", {
-        method: "POST",
-        body: JSON.stringify({
-          name: data.name,
-          _id: postId,
-          email: data.email,
-          body: data.body,
-          rating,
-        }),
-      });
-
+  const { mutate: createCommnent, isPending } = useMutation({
+    mutationFn: async ({
+      comment,
+      email,
+      name,
+    }: Pick<CommentPayload, "comment" | "email" | "name">) => {
+      const payload: CommentPayload = {
+        comment,
+        email,
+        name,
+        rating,
+        postId,
+      };
+      await axios.post("/api/post/comment", payload);
+    },
+    onSuccess: () => {
       setCommentSubmitted(true);
-    } catch (error) {
-      console.log("onSubmit error", error);
-    }
-  }
+
+      return toast.success("Comment posted successfully");
+    },
+  });
 
   function handleRating(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(errors);
     setRating(parseInt(e.target.value) as Comment["rating"]);
   }
 
@@ -64,49 +79,11 @@ function Comments({ comments, postId }: Props) {
                   contengano frasi offensive o volgari.
                 </p>
               </div>
-              <div className="rating gap-1">
-                <input
-                  type="radio"
-                  name="rate"
-                  value={1}
-                  className="mask mask-heart bg-red-400 heart-animation"
-                  onChange={handleRating}
-                  checked={rating === 1}
-                />
-                <input
-                  type="radio"
-                  name="rate"
-                  value={2}
-                  className="mask mask-heart bg-orange-400 heart-animation"
-                  onChange={handleRating}
-                  checked={rating === 2}
-                />
-                <input
-                  type="radio"
-                  name="rate"
-                  value={3}
-                  className="mask mask-heart bg-yellow-400 heart-animation"
-                  onChange={handleRating}
-                  checked={rating === 3}
-                />
-                <input
-                  type="radio"
-                  name="rate"
-                  value={4}
-                  className="mask mask-heart bg-lime-400 heart-animation"
-                  onChange={handleRating}
-                  checked={rating === 4}
-                />
-                <input
-                  type="radio"
-                  name="rate"
-                  value={5}
-                  className="mask mask-heart bg-green-400 heart-animation"
-                  onChange={handleRating}
-                  checked={rating === 5}
-                />
-              </div>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <RatingSelector handleRating={handleRating} rating={rating} />
+              <form
+                onSubmit={handleSubmit((e) => createCommnent(e))}
+                className="space-y-4"
+              >
                 <div className="form-control w-full ">
                   <label className="label">
                     <span className="label-text text-primary">Email</span>
@@ -114,10 +91,7 @@ function Comments({ comments, postId }: Props) {
                   <input
                     placeholder="email"
                     className="input input-primary input-bordered  w-full"
-                    {...register("email", {
-                      required: true,
-                      pattern: /^\S+@\S+$/i,
-                    })}
+                    {...register("email")}
                   />
                   {errors.email && (
                     <label className="label">
@@ -134,7 +108,7 @@ function Comments({ comments, postId }: Props) {
                   <input
                     placeholder="name"
                     className="input input-bordered w-full input-secondary"
-                    {...register("name", { required: true })}
+                    {...register("name")}
                   />
                   {errors.name && (
                     <label className="label">
@@ -151,21 +125,21 @@ function Comments({ comments, postId }: Props) {
                   <textarea
                     placeholder="Content"
                     className="textarea textarea-accent textarea-bordered h-24"
-                    {...register("body", { required: true, maxLength: 500 })}
+                    {...register("comment")}
                   />
-                  {errors.body && (
+                  {errors.comment && (
                     <label className="label">
                       <span className="label-text-alt">
-                        {errors.body.message}
+                        {errors.comment.message}
                       </span>
                     </label>
                   )}
                 </div>
                 <div className="flex w-full justify-end">
                   <button
+                    disabled={isPending || !isDirty || !isValid}
                     type="submit"
                     className="btn btn-active btn-accent"
-                    disabled={!isDirty || !isValid}
                   >
                     Send comment
                   </button>

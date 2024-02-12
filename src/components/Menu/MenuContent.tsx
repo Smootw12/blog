@@ -1,5 +1,5 @@
-import { Category } from "@/util/types";
-import { client } from "../../sanity/lib/client";
+import { Category } from "@/types/types";
+import { client } from "../../../sanity/lib/client";
 import MenuItem from "./MenuItem";
 
 async function getCategories() {
@@ -7,7 +7,7 @@ async function getCategories() {
     name,
   }`;
 
-  return await client.fetch(query, { cache: "no-store" });
+  return await client.fetch(query);
 }
 
 async function MenuContent() {

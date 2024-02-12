@@ -1,4 +1,4 @@
-import { Comment } from "@/util/types";
+import { Comment } from "@/types/types";
 import React from "react";
 
 type Props = {

@@ -1,7 +1,7 @@
-import { Category, Post } from "@/util/types";
+import { Category, Post } from "@/types/types";
 import { client } from "../../../../sanity/lib/client";
 import PostItem from "@/components/PostItem";
-import Menu from "@/components/PageMenu";
+import Menu from "@/components/Menu/PageMenu";
 
 type Props = {
   params: { category: string };
@@ -26,7 +26,7 @@ async function getPosts(category: string) {
       mainImage,
     }`;
 
-    return await client.fetch(postQuery, { cache: "no-store" });
+    return await client.fetch(postQuery);
   } catch (error: any) {
     console.log(error);
   }

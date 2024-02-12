@@ -1,7 +1,8 @@
 import { Github, Menu, Undo2 } from "lucide-react";
 import Link from "next/link";
-import MenuContent from "./MenuContent";
-import ThemeChanger from "./ThemeChanger";
+import MenuContent from "../Menu/MenuContent";
+import ThemeChanger from "../ThemeChanger/ThemeChanger";
+import Auth from "./Auth";
 
 function Navbar() {
   return (
@@ -39,6 +40,8 @@ function Navbar() {
           >
             <Undo2 />
           </Link>
+
+          <Auth />
         </div>
       </div>
     </>

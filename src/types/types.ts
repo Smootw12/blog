@@ -1,5 +1,11 @@
 import type { Image, Slug } from "sanity";
 
+export interface User {
+  name?: string | null | undefined;
+  email?: string | null | undefined;
+  image?: string | null | undefined;
+}
+
 export interface Post {
   _id: string;
   title: string;
