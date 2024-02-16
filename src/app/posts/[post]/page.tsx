@@ -1,13 +1,15 @@
 import moment from "moment";
-
 import Image from "next/image";
 import { client } from "../../../../sanity/lib/client";
 import { urlForImage } from "../../../../sanity/lib/image";
-import Menu from "@/components/PageMenu";
-import { Post, Comment } from "@/util/types";
+import { Post, Comment } from "@/types/types";
 import PortableText from "react-portable-text";
 import type { Image as sanityImage } from "sanity";
-import Comments from "@/components/Comments";
+import Comments from "@/components/Comments/Comments";
+import { getAuthSession } from "@/lib/auth";
+import LikeDislikeToggle from "@/components/LikeDislikeToggle";
+import { db } from "@/lib/db";
+import { Vote } from "@prisma/client";
 
 type Props = {
   params: { post: string };
@@ -17,34 +19,30 @@ interface PostQuery extends Post {
   comments: Comment[];
 }
 
-async function getPost(slug: string) {
-  try {
-    const query = `*[_type == "post" && slug.current == "${slug}"]{
-      _id,
-      title,
-      author-> {
-        name,
-      },
-      publishedAt,
-      description,
-      mainImage,
-      slug,
-      body,
-      categories[]-> {
-        name,
-      },
-      'comments': *[_type == "comment" && post._ref == ^._id && approved == true],
-    }[0]`;
-    return await client.fetch(query);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 export const revalidate = 60;
 
 async function page({ params }: Props) {
-  const post = (await getPost(params.post)) as PostQuery;
+  const session = await getAuthSession();
+
+  const query = `*[_type == "post" && slug.current == "${params.post}"]{
+    _id,
+    title,
+    author-> {
+      name,
+    },
+    publishedAt,
+    description,
+    mainImage,
+    slug,
+    body,
+    categories[]-> {
+      name,
+    },
+    'comments': *[_type == "comment" && post._ref == ^._id && approved == true],
+  }[0]`;
+
+  const post = (await client.fetch(query)) as PostQuery;
+
   if (!post) {
     return (
       <div className="w-full max-w-2xl flex flex-col items-start">
@@ -67,6 +65,24 @@ async function page({ params }: Props) {
       </div>
     );
   }
+
+  let userVote: Vote | null = null;
+
+  let votesAmount = await db.vote.count({
+    where: {
+      postId: post._id,
+    },
+  });
+
+  if (session) {
+    userVote = await db.vote.findFirst({
+      where: {
+        postId: post._id,
+        userId: session.user.id,
+      },
+    });
+  }
+
   return (
     <>
       <div className="w-full max-w-[95%] md:max-w-2xl flex flex-col items-start space-y-3">
@@ -80,8 +96,11 @@ async function page({ params }: Props) {
         <p className="text-base-content/60 text-xs italic">
           Published by {post.author.name}{" "}
           {moment(Date.parse(post.publishedAt)).fromNow()}
+          {" | " + votesAmount + " likes"}
         </p>
-        <div className="flex space-x-3 py-2">
+
+        <div className="flex items-center space-x-3">
+          <LikeDislikeToggle postId={post._id} alredyVoted={!!userVote} />
           {post.categories.map((category) => (
             <div
               key={category.name}
@@ -135,7 +154,14 @@ async function page({ params }: Props) {
             ),
           }}
         />
-        <Comments postId={post._id} comments={post.comments} />
+        <Comments
+          postId={post._id}
+          comments={post.comments}
+          user={{
+            name: session?.user.name || null,
+            email: session?.user.email || null,
+          }}
+        />
       </div>
     </>
   );

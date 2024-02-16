@@ -30,10 +30,7 @@ function ThemeItem({ changeTheme, theme, active }: Props) {
               <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
             </svg>{" "}
             <span className="flex-grow text-sm">{theme}</span>{" "}
-            <span
-              className="flex h-full flex-shrink-0 flex-wrap gap-1"
-              data-svelte-h="svelte-dkjulf"
-            >
+            <span className="flex h-full flex-shrink-0 flex-wrap gap-1">
               <span className="bg-primary w-2 rounded"></span>{" "}
               <span className="bg-secondary w-2 rounded"></span>{" "}
               <span className="bg-accent w-2 rounded"></span>{" "}

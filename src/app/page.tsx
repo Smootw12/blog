@@ -1,7 +1,7 @@
-import Menu from "@/components/PageMenu";
+import Menu from "@/components/Menu/PageMenu";
 import PostItem from "@/components/PostItem";
 import { client } from "../../sanity/lib/client";
-import { Post } from "@/util/types";
+import { Post } from "@/types/types";
 
 async function getPosts() {
   const query = `*[_type == "post"]{
